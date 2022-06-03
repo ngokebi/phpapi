@@ -6,9 +6,11 @@ class TaskController
     private $taskgateway;
 
 
-    public function __construct(TaskGateway $gateway)
+    public function __construct(TaskGateway $gateway,  int $user_id)
     {
         $this->taskgateway = $gateway;
+        $this->user_id = $user_id;;
+
     }
     public function processRequest(string $method, ?string $id): void // ? in ?string prefix $id to be nullable if its empty
     {
@@ -16,7 +18,7 @@ class TaskController
         if ($id === null) {
 
             if ($method == "GET") {
-                echo json_encode($this->taskgateway->all_Task($id));
+                echo json_encode($this->taskgateway->all_Task_User($this->user_id));
             } elseif ($method == "POST") {
                 //php://input allows you to read raw data from the request body.
                 $input_data =  (array) json_decode(file_get_contents("php://input"), true);
@@ -29,7 +31,7 @@ class TaskController
                     return;
                 } 
                     // add to dataabse if no error
-                    $create = $this->taskgateway->create_Task($input_data);
+                    $create = $this->taskgateway->create_Task_User($this->user_id, $input_data);
                     $this->respondCreated($create);
                 
             } else {
@@ -39,7 +41,7 @@ class TaskController
         } else {
 
             // check the id being passed, if not found
-            $task = $this->taskgateway->one_Task($id);
+            $task = $this->taskgateway->one_Task_User($this->user_id, $id);
             if ($task === false) {
                 $this->respondNotFound($id);
                 exit;
@@ -63,12 +65,12 @@ class TaskController
                             $this->respondUnprocessableEntity($errors);
                             return;
                         } 
-                        $this->taskgateway->update_Task($id, $input_data);
+                        $this->taskgateway->update_Task_User($this->user_id, $id, $input_data);
                         echo json_encode(["message" => "Task with id $id has been Updated"]);
                         break;
 
                     case 'DELETE':
-                        $this->taskgateway->delete_Task($id);
+                        $this->taskgateway->delete_Task_User($this->user_id, $id);
                         echo json_encode(["message" => "Task with id $id has been Deleted"]);
                         break;
 

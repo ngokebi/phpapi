@@ -2,7 +2,8 @@
 
 class Auth
 {
-public $user_gateway; 
+    public $user_gateway;
+    private $user_id;
 
     public function __construct(UserGateway $gateway)
     {
@@ -22,12 +23,20 @@ public $user_gateway;
         // pass key to a variable 
         $api_key = $_SERVER["HTTP_X_API_KEY"];
 
-        // if user doesnt have a valid key, break
-        if ($this->user_gateway->getByAPI($api_key) === false) {
+        
+        $user = $this->user_gateway->getByAPI($api_key);
+        
+// if user doesnt have a valid key, break
+        if ($user === false) {
             http_response_code(401);
             echo json_encode(["message" => "API key is Invalid"]);
-            exit;
+            return false;
         }
+        $this->user_id = $user["id"];
         return true;
+    }
+    public function getUserID()
+    {
+        return $this->user_id;
     }
 }

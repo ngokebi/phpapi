@@ -29,12 +29,25 @@ if (!$auth->authenticateAPIkey()) {
     exit;
 }
 
+$user_id = $auth->getUserID();
+
 
 $gateway = new TaskGateway($database);
 
-$taskcontroller = new TaskController($gateway);
+$taskcontroller = new TaskController($gateway, $user_id);
 
 $taskcontroller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+
+
+
+
+
+
+
+
+
+
+
 
 
 // how to call an api with another api.. airtime class holds the function
