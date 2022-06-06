@@ -22,10 +22,20 @@ $database = new Database();
 
 $user_gateway = new UserGateway($database);
 
-// add auth classthat checks for api key
+// how to check for the authorization header
+// var_dump($_SERVER["HTTP_AUTHORIZATION"]);
+// exit;
+
+// add auth class that checks for api key
 $auth = new Auth($user_gateway);
 
-if (!$auth->authenticateAPIkey()) {
+// validate using authetication key
+// if (!$auth->authenticateAPIkey()) {
+//     exit;
+// }
+
+// validate using authetication token
+if (!$auth->authenticateAccessToken()) {
     exit;
 }
 
