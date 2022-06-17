@@ -1,11 +1,12 @@
 <?php
-// require './vendor/autoload.php';
+
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class JwtHandler
 {
-    protected $jwt_secrect;
+    protected $jwt_secret = "586E3272357538782F4125442A472D4B6150645367566B597033733676397924";
     protected $token;
     protected $issuedAt;
     protected $expire;
@@ -19,10 +20,7 @@ class JwtHandler
         $this->issuedAt = time();
 
         // Token Validity (3600 second = 1hr)
-        $this->expire = $this->issuedAt + 120;
-
-        // Set your secret or signature
-        $this->jwt_secrect = "72357538782F4125442A472D4B6150645367566B597033733676397924422645";
+        $this->expire = $this->issuedAt + 1800;
 
         // Issuer
         $this->domainName = "http://localhost/phpapi/api/login.php";
@@ -42,21 +40,23 @@ class JwtHandler
             "data" => $payload
         );
 
-        $this->jwt = JWT::encode($this->token, $this->jwt_secrect, 'HS256');
+        $this->jwt = JWT::encode($this->token, $this->jwt_secret, 'HS256');
         return $this->jwt;
     }
 
     public function jwtDecodeData($jwt_token)
     {
+
         try {
-            $decode = JWT::decode($jwt_token, $this->jwt_secrect, array('HS256'));
-            return [
-                "data" => $decode
-            ];
+            $decode = JWT::decode($jwt_token, new Key($this->jwt_secret, 'HS256'));
+            $payload = json_encode($decode->data);
+            return $payload;
         } catch (Exception $e) {
-            return [
+            http_response_code(401);
+            echo json_encode([
                 "message" => $e->getMessage()
-            ];
+            ]);
+            exit;
         }
     }
 }

@@ -37,10 +37,10 @@ if (!password_verify($input_data["password"], $user["password"])) {
 }
 
 
-$payload = json_encode([
+$payload = [
     "sub" => $user["id"],
     "email" => $user["email"]
-]);
+];
 
 $jwt = new JwtHandler();
 $domainName = 'http://localhost/phpapi/api';

@@ -52,22 +52,17 @@ class Auth extends JwtHandler
         // $result = base64_decode($matches[1], true);
 
         //JWT token
-        $result = $this->jwtDecodeData($matches[1], true);
-        print_r($result);
+        $result = json_decode($this->jwtDecodeData($matches[1]), true);
 
-        // if ($result === false) {
-        //     http_response_code(400);
-        //     echo json_encode(["message" => "invalid authorization header"]);
-        //     return false;
-        // }
-        // $output_data = json_decode($result);
+        if ($result === false) {
+            http_response_code(400);
+            echo json_encode(["message" => "invalid authorization header"]);
+            return false;
+        }
 
-        // if ($output_data === null) {
-        //     http_response_code(400);
-        //     echo json_encode(["message" => "invalid  JSON"]);
-        //     return false;
-        // }
-        // $this->user_id = $output_data["id"];
-        // return true;
+        $this->user_id = $result["sub"];
+
+
+        return true;
     }
 }

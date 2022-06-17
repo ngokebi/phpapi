@@ -39,14 +39,14 @@ if (!$auth->authenticateAccessToken()) {
     exit;
 }
 
-$user_id = $auth->getUserID();
+// $user_id = $auth->getUserID();
 
 
-$gateway = new TaskGateway($database);
+// $gateway = new TaskGateway($database);
 
-$taskcontroller = new TaskController($gateway, $user_id);
+// $taskcontroller = new TaskController($gateway, $user_id);
 
-$taskcontroller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+// $taskcontroller->processRequest($_SERVER["REQUEST_METHOD"], $id);
 
 
 
@@ -61,10 +61,10 @@ $taskcontroller->processRequest($_SERVER["REQUEST_METHOD"], $id);
 
 
 // how to call an api with another api.. airtime class holds the function
-// $input_data =  (array) json_decode(file_get_contents("php://input"), true);
-// $buy_airtime = new Airtime();
-// $make_call = $buy_airtime->callAPI('POST', 'http://test.shagopayments.com/public/api/test/b2b', json_encode($input_data));
-// $response = json_decode($make_call, true);
-// // $errors   = $response['response']['errors'];
-// // $data     = $response['response']['data'][0];
-// print_r(json_encode($response));
+$input_data =  (array) json_decode(file_get_contents("php://input"), true);
+$buy_airtime = new Airtime();
+$make_call = $buy_airtime->callAPI('POST', 'http://test.shagopayments.com/public/api/test/b2b', json_encode($input_data));
+$response = json_decode($make_call, true);
+// $errors   = $response['response']['errors'];
+// $data     = $response['response']['data'][0];
+print_r(json_encode($response));
